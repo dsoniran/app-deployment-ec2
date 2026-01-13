@@ -155,6 +155,7 @@ The App Dependency is NodeJS 20.x; however the latest version of NodeJS is newer
 
 ---
 # Confirm Successful Deployment
+==============================================================
 1. Go to `Instance Summary` in your browser
 
 2. Copy the `Public IP4` address of your instance
@@ -166,3 +167,15 @@ The App Dependency is NodeJS 20.x; however the latest version of NodeJS is newer
 4. As the app is running on port 3000, not 80 (the default). Add `:3000` to the IP address
 
 ![alt text](sparta_test_app.png)
+
+---
+# !! Clean up Resources !!
+==============================================================
+
+Ensure to clean up all resoures !!
+
+1. Return to your instance on the AWS browser
+
+2. Select `Instance state`, then `Terminate (delete) instance`
+
+![alt text](delete_instance.png)
