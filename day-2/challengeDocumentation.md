@@ -13,13 +13,13 @@ The following dependencies are required to run the application:
 
 ## Create New Instance (AWS EC2)
 
-| Names and tags | Inputs |
+| Details | Inputs |
 |:----------------|:--------|
+| Names and tags | se-dare-deploy-app|
 | AMI | Ubuntu 24.04|
 | Instance Type | t3.micro|
 | Key Pair | se-name-key-pair.pem|
-| Network Settings |
-| 
+| Network Settings | 
 | - Security Group Name | se-name-sg|
 | - Description | se-name-sg created at YYYY-MM-DD-HH-MM-SS|
 | - Securtiy Group Rule 1 |  Type: SSH &#124;  Source: 0.0.0.0/0 &#124; Port Range: 22 |
@@ -44,7 +44,7 @@ The following dependencies are required to run the application:
 ![alt text](images/connect_to_instance.png)
 
 
-## Deploying bash script to EC2 instance (nginx)
+## Creating and deploying bash script to EC2 instance (nginx)
 
 
 > NB: Go to your instance and select `Connect` then `SSH client` to find the Instance ID
