@@ -26,7 +26,6 @@ The following dependencies are required to run the application:
 | - Securtiy Group Rule 2 |  Type: HTTP &#124;  Source: 0.0.0.0/0 &#124; Port Range: 80 |
 | - Securtiy Group Rule 3 |  Type: Custom TCP &#124;  Source: 0.0.0.0/0 &#124; Port Range: 3000 |
 |Configure Storage | 1x8GiB pg3 root volume |
-|||
 
 
 
