@@ -1,181 +1,127 @@
-# App Dependencies
-==============================================================
+# Deployment to VM on EC2
+Goal for today
+Now we have deployed a simple package it is time to deploy a custom application.
+We will be deploying the "Sparta App".
+Now this app is very basic, it runs using NodeJS and has only a few features. But it does the job for us as we learn, practice and test things.
+If we used a more complex custom application it would often make new concepts too difficult to retain. So the idea is to keep the app simple, as we can focus on the how and why.
+The goal today is to deploy the custom app and have it's homepage visible to the internet.
+As a bonus we may even be able to start putting the steps into a bash script.
 
-The following dependencies are required to run the application:
-- App code
-- Linux (Ubuntu 24.04 LTS)
-- Nginx
-- NodeJS 20.x
-
----
-# Create New Instance (AWS EC2)
-==============================================================
-- Names and tags
-- AMI = Ubuntu 24.04
-- Instance Type = t3.micro
-- Key Pair
-- Network settings, select edit
-    - security group name
-    - description
-    - securtiy group rule 1
-        - Type SSH 
-        - Source 0.0.0.0/0
-        - Port Range 22
-    - securtiy group rule 2
-        - Type HTTP
-        - Source 0.0.0.0/0
-        - Port Range 80
-    - securtiy group rule 3
-        - Type Custom TCP
-        - Source 0.0.0.0/0
-        - Port Range 3000
-- Configure Storage 1x8GiB pg3 root volume
+Usually you will either be one of the developers of the app or will be given an app by a developer.
+If you are given an app you NEED to make sure to get as clear a set of instructions as possible in order to deploy the app properly.
+DISCUSSION
+Examples of things you need to find out:
+What operating system?
+What dependencies?
+What commands are needed?
+How to set up connections etc.
+Does the app need compiling/installing etc.
 
 
----
-# Deploying bash script to EC2 instance
-==============================================================
+The dependencies for Sparta App are:
+App code
+Linux (Ubuntu)
+Nginx
+NodeJS 20.x
 
-> NB: Go to your instance and select `Connect` then `SSH client` to find the Instance ID
 
-1. On your terminal (or GitBash) Login to your instance using SSH 
 
-    `ssh -i "se-dare-key-pair.pem" ubuntu@ec2-18-201-197-127.eu-west-1.compute.amazonaws.com`
+Creating an instance for our sparta app
 
-2. Open a blank text file on your instance
+Delete the instance we currently have
+Make a new instance, with the same settings except:
+The sparta app runs on port 3000 (a free port)
+Make a new SG (se-name-app-sg) and give it the rules:
+Port 22 (source = 0.0.0.0/0)
+Port 80 (source = 0.0.0.0/0)
+Port 3000 (source = 0.0.0.0/0)
+Assign the SG to your instance
+Launch the instance
+Log in to the instance
+Run your Nginx script again
 
-    `sudo nano deploy-nginx.sh`
 
-> NB. nano is a basic text editor
+Now we can progress
+Getting the app code onto your EC2 instance
 
-3. Paste contents of `deploy_nginx.sh` from VS Code to open file
+Hints:
+Use the scp command
+You will need your SSH private key
 
-4. Save the file by pressing
-`Ctrl + X`
+The SCP command stands for "Secure Copy".
+It uses SSH to transfer files from one server to another. We will use it to send out app code from out local machine to our EC2 instance, securely.
+SCP is installed on Windows and Mac systems by default, much like SSH.
+Open a terminal (GitBash, Terminal etc.)
+Navigate to the folder that has your app code folder
+Recommend to make the folder a zip
+Run the folllowing command:
+scp -i ~/.ssh/aws-name-key-pair.pem ./sparta-app-code.zip ubuntu@IP-ADDRESS:/home/ubuntu/
 
-5. Confirm the file name
-`y + Enter`
+Breaking down the command:
+scp -i ~/.ssh/aws-name-key-pair.pem
+Use the scp command and use our ssh private key to identify ourselves
+./sparta-app-code.zip
+The file/folder we want to copy over
 
-6. Check file content
+ubuntu@IP-ADDRESS:/home/ubuntu/
+Where to send the file or folder
+Note the directory we want to put it in at the end
 
-    `cat deploy-nginx.sh`
+After the command finished check it is on your EC2 instance by running ls to list files.
+Make sure you are in /home/ubuntu
 
-7. Run the bash script
+Unzipping the file
+A package to unzip files does not come with ubuntu by default, so we need to install one and use it:
 
-    `./deploy-nginx.sh`
+# install unzip
+sudo apt install unzip -y
+# unzip file
+sudo unzip sparta-app-code.zip
 
-8. If you are denied permission to run the file you can try:
+Now check again with ls, you should have a directory called "folder-name" that contains the app contents.
+Installing remaining dependencies
+Many applications require a specific version of a language. In our case the Sparta App requires NodeJS version 20 of some kind.
+The latest version of nodejs is now newer than this. So if we just asked Linux to install node, it would install a newer version.
+This means we need to specify exactly which version to download before we ask it it install nodejs.
 
-    a. Adding permissions to execute by running the command:
 
-    `sudo chmod +x nginx-deploy.sh`
+sudo bash -c "curl -fsSL https://deb.nodesource.com/setup_20.x | bash -" && \
+sudo apt install -y nodejs
+node -v
 
-    b. Run the previous command again
+The above code tells Linux exactly where to go to get NodeJS and then when we ask it to install it, it gets the version we want.
+Then we check to version to verify it worked as expected
+Navigate to the right folder (directory)
 
-![alt text](nginx_homepage.png)
+Use cd to go into the folder that contains the app code
+e.g. cd sparta-app-code
+We need to then go into the folder that contains the code itself. Nodejs uses a file app.js as the main application file. We run this file and we run the app.
+cd into app
+Double check you are in the right place
+(run ls and check the files there)
+run pwd and make sure you are in se-test-app/app or similar
+Run the app
 
----
-# Transfer files to EC2 instance using SCP
-==============================================================
-1. Open terminal on your local machine 
+First we need to install required dependencies of Nodejs so the app can run
+This is similar to Python packages
+The devs have set up this for us, all we need to do is run npm install
+(You may need to add sudo as it requires greater permissions to be run
+Why? It changes the environment and can cause conflcits.)
 
-2. Navigate to the directory where your files are stored
+Then we just need to start it
+Run npm start app.js
+The app should run on port 3000
+Note: It take away your ability to run commands
+This is called running in the "foreground". Not ideal so we will look to improve this later.
+Check the app is deployed on your public IP, and thus visible to the internet
 
-     `cd path/to/your/files`
+Go to "Instance Summary" in your browser
+Grab the public IP address of your instance
+Paste it into a new tab
+It should show the Nginx homepage.
+NOTE: Be careful, check your browser doesn't try to use https!
 
-3. Use the SCP command to transfer files to your EC2 instance
-
-    `scp -i "se-dare-key-pair.pem" ./nodejs20-se-test-app-2025.zip ubuntu@<your-ec2-public-dns>:/home/ubuntu/` 
-> NB. replace <your-ec2-public-dns> with your instance\'s public DNS
-
-4. Verify the file transfer by logging into your EC2 instance and listing the files
-
- `ssh -i "se-dare-key-pair.pem" ubuntu@<your-ec2-public-dns> 'ls -l /home/ubuntu/'`
-
-> NB. replace <your-ec2-public-dns> with your instance\'s public DNS
-
-5. You should see `./nodejs20-se-test-app-2025.zip` listed among the files in the `/home/ubuntu/` directory
-
----
-# Unzip App
-==============================================================
-> NB. SCP copies one file at a time, so it is more efficient to move a compressed zip file.
-To unzip it on the EC2 instance, we need to install the unzip package.
-
-1. Install unzip
-
-    `sudo apt install unzip -y`
-
-2. Unzip file
-
-    `sudo unzip nodejs20-se-test-app-2025.zip`
-
----
-# Install Packages/Libraries
-==============================================================
-> NB. npm is the package manager for node.js packages/modules (Javascript libraries). When you install nodejs, it also installs npm.
-Nodejs is a method to write Javascript backend apps such as APIs.
-
----
-The App Dependency is NodeJS 20.x; however the latest version of NodeJS is newer. If we installed it directly on Linux, the newest version will be installed.
->NB. Ensure to specify the nodeJS version
-
-1. Download nodeJS
-
-    `sudo bash -c "curl -fsSL https://deb.nodesource.com/setup_20.x | bash -"`
-
-2. Install nodeJS
-
-    `sudo apt install -y nodejs`
-
-3. Confirm the version of nodeJS
-
-    `node -v` or `node --version`
-
----
-# Run Application
-==============================================================
-1. Navigate to the folder the contains the package.json
-
-    `cd nodejs20-se-test-app-2025/app`
-
-2. Confirm you are in the correct location
-
-    `ls`
-
-3. Install the libraries from packages.json
-
-    `npm install`
-> NB. When actioning a complete install of packages, ensure to be in the same directory as packages.json
-
-4. Run the application
-
-    `npm start app.js`
-> NB. `npm start <app.js>` can be run with a relative filepath
-
----
-# Confirm Successful Deployment
-==============================================================
-1. Go to `Instance Summary` in your browser
-
-2. Copy the `Public IP4` address of your instance
-
-3. Paste it into the tab (ensure it is http and not https)
-
-4. You should see the nginx homepage again
-
-4. As the app is running on port 3000, not 80 (the default). Add `:3000` to the IP address
-
-![alt text](sparta_test_app.png)
-
----
-# !! Clean up Resources !!
-==============================================================
-
-Ensure to clean up all resoures !!
-
-1. Return to your instance on the AWS browser
-
-2. Select `Instance state`, then `Terminate (delete) instance`
-
-![alt text](delete_instance.png)
+Why does it not show the app?
+The app is running on port 3000, not 80 (the default)
+Add :3000 to the ip address
+All being well, the Sparta app will show!
