@@ -1,4 +1,4 @@
-# Deploying Mondgo DB to an EC2 Instance
+# Deploying MondgoDB to an EC2 Instance
 
 ## Create New Instance (AWS EC2)
 
@@ -66,8 +66,8 @@
 6. Install MongoDB application 
     ```
       curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | \
-      sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg \
-      --dearmor
+        sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg \
+        --dearmor
     ```
 7. echo something
     ```
@@ -100,9 +100,9 @@
 3. Edit and save the the file
     ```
     xx > 0.0.0.0
-4. Restart MongoDB
+4. Start MongoDB
     ```
-    sudo systemctl restart mongod
+    sudo systemctl start mongod
     ```
 5. Confirm status of MongoDB
     ```

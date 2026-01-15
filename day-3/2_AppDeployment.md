@@ -1,4 +1,7 @@
-# Deploy an Application to MongoDB
+p# Deploy an Application to MongoDB
+
+## Database Instance
+Ensure to keep your MongoDB Instance in active state (running)
 
 ## Create New Instance (AWS EC2)
 
@@ -50,8 +53,11 @@
     ```
     sudo chmod +x app-deploy.sh
     ```
-3. Run your bash script. this file will action the following
-
+3. Run your bash script. 
+    ```
+    ./app-deploy.sh
+    ```
+    This file will action the following
     - Clone the app from GitHub
     - Install nginx and curl
     - Download and install NodeJS 
@@ -59,9 +65,6 @@
     - Kill all node processes
     - Start the app.js
 
-    ```
-    ./app-deploy.sh
-    ```
 4. Create the variable for the MongoDB connection string
 
     The Database IP Address (DB-IP-ADDRESS) is normally onfigured to a singular IP address to ensure that the frontend only has access. However, this exercise utilises a public IP for learning purposes. 
@@ -77,15 +80,37 @@
     ```
     node se-sparta-test-app/app/seeds/seed.js
     ```
+<details>
+<summary> click to expand </summary>
+
 ![alt text](images/success_seed_js.png)
+</details>
+
 
 7. Start the application
     ```
     npm start se-sparta-test-app/app/app.js
     ```
+<details>
+<summary> click to expand </summary>
+
 ![alt text](images/success_app_start.png)
+</details>
 
-8. The seed.js includes a random words generator. So you can stop the application, re-seed and start the application to generate a new output.
+8. On you browser, go onto the *app* public IP Address and add `/posts`.
 
-9. If an error is raised `Error: listen EADDRINUSE: address already in use :::3000`, run the command `pm2 kill`. This will kill an active applications. Reseed and start the app.
+![alt text](images/success_seed_1.png)
+
+9. The seed.js includes a random words generator. So you can stop the application, re-seed and start the application to generate a new output.
+
+![alt text](images/success_seed_2.png)
+
+
+10. If an error is raised `Error: listen EADDRINUSE: address already in use :::3000`, run the command `pm2 kill`. This will kill an active applications. Reseed and start the app.
+
+    ```
+    pm2 kill
+    node seed/seeds.js
+    pm2 start app.js
+    ```
 
