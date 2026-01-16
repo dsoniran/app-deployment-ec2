@@ -110,7 +110,7 @@ Ensure to keep your MongoDB Instance in active state (running)
 
     ```
     pm2 kill
-    node seed/seeds.js
+    node seeds/seed.js
     pm2 start app.js
     ```
 
