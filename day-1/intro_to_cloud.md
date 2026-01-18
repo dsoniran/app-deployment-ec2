@@ -1,13 +1,3 @@
-
-### Agenda for 5-day training
-
-1. Introduction to Cloud and AWS Console
-2. Launching an EC2 Instance
-3. Manual Application Deployment
-4. Database Deployment
-5. Adding features to an instance - creating an AMI, Monitoring and Alarms, Autoscaling
-
----
 # Instrouction to Cloud
 =====================================
 

@@ -17,3 +17,15 @@ Sparta Education also fosters a supportive community where learners collaborate 
 - 🌐 Official site: https://www.sparta.education 
 - 📌 About Sparta Education: https://www.sparta.education/about
 - 👥 LinkedIn: https://uk.linkedin.com/company/sparta-education
+
+
+
+---
+
+# Agenda for 5-day App Deployment training
+
+1. Introduction to Cloud and AWS Console
+2. Launching an EC2 Instance
+3. Manual Application Deployment
+4. Database Deployment
+5. Adding features to an instance - creating an AMI, Monitoring and Alarms, Autoscaling
